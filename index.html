@@ -514,7 +514,7 @@
         // API URL Helper (Handles both web server and local file execution)
         const API_BASE = (window.location.protocol === 'file:') 
             ? 'http://localhost:3000' 
-            : (window.location.protocol + "//" + window.location.hostname + ":3000");
+            : '';
 
         // News Section Loading
         const parseFileUrls = (fileUrlsRaw, fallbackFileUrl) => {
