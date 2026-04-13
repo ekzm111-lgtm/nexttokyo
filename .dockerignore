@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+database.sqlite
+uploads/
+.git
+.gitignore
+Dockerfile
+.gemini
+backup
+*.zip
+*.bat
