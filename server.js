@@ -11,7 +11,8 @@ const PORT = process.env.PORT || 3000;
 let serverStarted = false;
 
 // Database Setup
-const dbPath = path.join(__dirname, 'database.sqlite');
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+const dbPath = path.join(DATA_DIR, 'database.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
 });
 
 // Ensure upload directory exists
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.join(DATA_DIR, 'uploads');
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir);
 }
