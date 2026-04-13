@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>解体工事 | Next plus tokyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --primary:#002D59; --accent:#43A047; --text:#1f2937; --muted:#6b7280; --bg:#f8fafc; --border:#e5e7eb; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Noto Sans JP', sans-serif; color:var(--text); line-height:1.8; padding-top:84px; background:#fff; }
+    a { color:inherit; text-decoration:none; }
+    .container { max-width:1100px; margin:0 auto; padding:0 22px; }
+    .header { position:fixed; top:0; left:0; right:0; height:84px; background:rgba(255,255,255,.94); border-bottom:1px solid var(--border); z-index:50; }
+    .header .container { height:100%; display:flex; align-items:center; justify-content:space-between; }
+    .logo img { height:34px; width:auto; }
+    .nav { display:flex; gap:22px; color:var(--primary); font-size:.92rem; font-weight:700; }
+    .nav a.active { color:var(--accent); }
+    .hero { height:320px; display:flex; align-items:center; color:#fff; text-align:center; position:relative; }
+    .hero::before { content:''; position:absolute; inset:0; background:linear-gradient(rgba(0,45,89,.62),rgba(0,45,89,.72)), var(--hero-bg) center/cover no-repeat; }
+    .hero .container { position:relative; z-index:1; }
+    .hero p { letter-spacing:.12em; color:#86efac; font-weight:700; }
+    .hero h1 { margin-top:8px; font-size:2.2rem; line-height:1.35; }
+    section { padding:74px 0; }
+    .section-title { font-size:2rem; color:var(--primary); border-left:6px solid var(--accent); padding-left:12px; margin-bottom:16px; }
+    .lead { color:var(--muted); margin-bottom:24px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .card { border:1px solid var(--border); padding:22px; background:#fff; }
+    .card h3 { color:var(--primary); margin-bottom:10px; font-size:1.3rem; }
+    .gallery-wrap { padding:64px 0; background:var(--bg); }
+    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .item { background:#fff; border:1px solid var(--border); overflow:hidden; }
+    .item img { width:100%; height:220px; object-fit:cover; background:#f1f5f9; }
+    .item-body { padding:16px; }
+    .date { font-size:.8rem; color:var(--accent); margin-bottom:6px; font-weight:700; }
+    .title { color:var(--primary); font-weight:700; }
+    .empty { color:var(--muted); text-align:center; padding:40px 0; }
+    .footer { background:#001a33; color:#fff; text-align:center; padding:28px 0; font-size:.84rem; margin-top:10px; }
+    @media (max-width:960px){ .nav{display:none;} .hero{height:280px;} .hero h1{font-size:1.8rem;} .grid{grid-template-columns:1fr;} .gallery-grid{grid-template-columns:1fr;} }
+  </style>
+
+</head>
+<body>
+  <header class="header"><div class="container"><a href="index.html" class="logo"><img src="logo.png" alt="logo"></a><nav class="nav">
+        <a href="index.html">ホーム</a>
+        <a href="recycle.html">リサイクル施設</a>
+        <a href="demolition.html" class="active">解体工事</a>
+        <a href="civil.html">土木・造成</a>
+        <a href="gallery.html">施工実績</a>
+        <a href="index.html#contact">お問い合わせ</a>
+      </nav></div></header>
+  <section class="hero" style="--hero-bg:url('./img_demolition.jpg')"><div class="container"><p>DEMOLITION WORK</p><h1>安全と品質を両立した、計画的な解体工事</h1></div></section>
+  <section><div class="container"><h2 class="section-title">建物特性に合わせた最適施工</h2><p class="lead">木造、RC、S造、内装解体まで幅広く対応。近隣への配慮と工程管理を徹底します。</p><div class="grid"><article class="card"><h3>木造解体</h3><p>住宅解体で培ったノウハウを活かし、丁寧な施工を行います。</p></article><article class="card"><h3>RC・S造解体</h3><p>現場条件に応じた重機計画と分別解体で安全と効率を両立します。</p></article><article class="card"><h3>内装スケルトン</h3><p>テナント原状回復や用途変更に合わせ、精度の高い撤去を実施します。</p></article><article class="card"><h3>近隣対策</h3><p>養生、散水、搬出計画を標準化し、周辺環境への影響を最小限に抑えます。</p></article></div></div></section>
+  <footer class="footer"><div class="container">&copy; 2026 Next plus tokyo. All Rights Reserved.</div></footer>
+</body>
+</html>

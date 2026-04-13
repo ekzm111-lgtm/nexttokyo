@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>株式会社 Next plus tokyo | 環境ソリューション・解体・リサイクルのプロフェッショナル</title>
+    <meta name="description" content="人と環境への敬愛を礎に。株式会社 Next plus tokyoは、高度なリサイクル施設と分別解体技術を通じて、持続可能な循環型社会の実現をリードする環境ソリューション企業です。">
+    
+    <!-- Google Fonts: Noto Sans KR + JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Library for dynamic effects -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables: Keiaisha Premium Palette */
+        :root {
+            --primary: #002D59; /* 정제된 딥 네이비 */
+            --primary-light: #004080;
+            --accent: #43A047;  /* 활기찬 에코 그린 */
+            --accent-soft: rgba(67, 160, 71, 0.1);
+            --text-dark: #1F2937;
+            --text-light: #6B7280;
+            --bg-gray: #F9FAFB;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            --shadow: 0 10px 30px -5px rgba(0,0,0,0.1);
+            --header-h: 90px;
+        }
+
+        /* Global Defaults */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Noto Sans KR', 'Noto Sans JP', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+            color: var(--text-dark); 
+            line-height: 1.8; 
+            background: var(--white);
+            padding-top: var(--header-h);
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        ul { list-style: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header (GNB Enhancement with Glassmorphism) */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+            z-index: 1000; display: flex; align-items: center;
+            transition: all 0.4s ease;
+        }
+        .header .container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.6rem; color: var(--primary); letter-spacing: 0.05em; }
+        .logo i { color: var(--accent); font-size: 2rem; }
+
+        .nav { display: flex; align-items: center; gap: 2rem; }
+        .nav-item { text-align: center; position: relative; }
+        .nav-link { 
+            display: block; font-size: 0.95rem; font-weight: 700; color: var(--primary);
+            padding: 10px 0;
+        }
+        .nav-sub-text { display: block; font-size: 0.7rem; font-weight: 400; color: var(--accent); opacity: 0.8; margin-top: -4px; letter-spacing: 0.1em; }
+        
+        .nav-item::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 2px; background: var(--accent); transition: 0.3s;
+        }
+        .nav-item:hover::after { width: 100%; }
+        .nav-link:hover { color: var(--accent); }
+
+        .btn-cta {
+            background: var(--primary); color: #fff !important; padding: 12px 28px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,45,89,0.2);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .btn-cta:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(67,160,71,0.3); }
+
+        /* Hero Styling */
+        .hero {
+            height: 80vh; min-height: 650px; position: relative;
+            display: flex; align-items: center; justify-content: center; text-align: center; color: #fff;
+            overflow: hidden; /* For zooming background */
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,51,102,0.6), rgba(0,51,102,0.75)), url('./img_hero.jpg') center/cover;
+            z-index: 1;
+            animation: kenburns 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes kenburns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .hero-inner { position: relative; z-index: 2; }
+        .hero-inner .hero-kicker {
+            letter-spacing: 0.5em;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: clamp(0.95rem, 1.15vw, 1.2rem);
+        }
+        .hero-inner h1 {
+            font-size: clamp(2.5rem, 4.6vw, 4.2rem);
+            line-height: 1.3;
+            margin: 14px 0 16px;
+        }
+        .hero-inner p {
+            font-size: clamp(1.08rem, 1.7vw, 1.35rem);
+            line-height: 1.8;
+        }
+        
+        .news-ticker-hero {
+            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.5); padding: 15px 0;
+            font-size: 0.9rem; color: #fff;
+        }
+
+        /* Section Commons */
+        section { padding: 120px 0; }
+        .section-header { text-align: center; margin-bottom: 80px; }
+        .section-header p { color: var(--accent); font-weight: 700; letter-spacing: 0.3em; margin-bottom: 15px; text-transform: uppercase; font-size: 0.9rem; }
+        .section-header h2 { font-size: 2.5rem; color: var(--primary); position: relative; padding-bottom: 20px; }
+        .section-header h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: var(--accent); }
+
+        /* RECYCLE FACILITY Section */
+        .facility-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .facility-img img { width: 100%; border-radius: 4px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .tag-list { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tag-item { background: var(--bg-gray); padding: 5px 15px; font-size: 0.8rem; font-weight: 700; color: var(--primary); border-left: 3px solid var(--accent); }
+
+        /* SERVICE Section */
+        .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+        .service-box { background: #fff; padding: 60px 40px; transition: 0.4s; position: relative; overflow: hidden; }
+        .service-box:hover { background: var(--primary); color: #fff; }
+        .service-box i { font-size: 3rem; color: var(--accent); margin-bottom: 30px; }
+        .service-box h3 { font-size: 1.5rem; margin-bottom: 20px; }
+        .service-box p { font-size: 0.95rem; opacity: 0.8; margin-bottom: 30px; }
+        .service-box:hover i, .service-box:hover p { color: #fff; }
+        .btn-more { font-weight: 700; font-size: 0.9rem; border-bottom: 1px solid currentColor; padding-bottom: 5px; cursor: pointer; }
+
+        /* CSR & SAFETY Section */
+        .csr-bg { background: var(--bg-gray); position: relative; }
+        .csr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .csr-card { background: #fff; padding: 40px; border-top: 5px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .csr-card h4 { color: var(--primary); font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .csr-card h4 i { color: var(--accent); }
+
+        /* COMPANY Section */
+        .company-grid { display: grid; grid-template-columns: 1fr 2.5fr; gap: 60px; }
+        .company-table { width: 100%; border-collapse: collapse; }
+        .company-table th { width: 25%; background: var(--bg-gray); padding: 25px; text-align: left; border-bottom: 1px solid var(--border); color: var(--primary); font-weight: 700; }
+        .company-table td { padding: 25px; border-bottom: 1px solid var(--border); }
+
+        /* CONTACT Form Enhancement */
+        .contact-area { max-width: 900px; margin: 0 auto; background: #fff; border: 1px solid var(--border); padding: 60px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .form-label { display: block; font-weight: 700; margin-bottom: 10px; font-size: 0.95rem; }
+
+        .form-label span { background: #E74C3C; color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; margin-left: 10px; vertical-align: middle; }
+        .form-input { width: 100%; padding: 15px; background: var(--bg-gray); border: 1px solid transparent; border-radius: 4px; font-family: inherit; margin-bottom: 25px; transition: 0.3s; }
+        .form-input:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+        /* Footer */
+        .footer { background: #001A33; color: #fff; padding: 80px 0 40px; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+        .footer-logo { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
+        .footer-logo span { color: var(--accent); }
+        .footer-links h5 { margin-bottom: 25px; font-size: 1.1rem; border-left: 4px solid var(--accent); padding-left: 15px; }
+        .footer-links li { margin-bottom: 12px; opacity: 0.7; font-size: 0.9rem; }
+        .footer-links li:hover { opacity: 1; text-decoration: underline; }
+        .footer-bottom { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; opacity: 0.5; }
+
+        /* Responsive Settings */
+        @media (max-width: 992px) {
+            .nav, .btn-cta { display: none; }
+            .hero-inner h1 { font-size: 2.5rem; }
+            .hero-inner p { font-size: 1rem; }
+            .hero-inner .hero-kicker { font-size: 0.9rem; letter-spacing: 0.35em; }
+            .facility-layout, .csr-grid, .service-grid, .company-grid, .form-grid { grid-template-columns: 1fr; }
+            .company-grid, .form-grid { gap: 30px; }
+            .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+            .contact-area { padding: 40px 20px; }
+            .company-table th { width: 30%; padding: 15px; }
+            .company-table td { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <a href="#home" class="logo">
+                <img src="logo.png" alt="Next plus tokyo logo" style="height:34px; width:auto;">
+            </a>
+            <nav class="nav">
+                <div class="nav-item">
+                    <a href="#home" class="nav-link">ホーム</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#recycle" class="nav-link">リサイクル施設</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#service" class="nav-link">事業案内</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#csr" class="nav-link">環境・安全・社会</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#company" class="nav-link">会社案内</a>
+                </div>
+            </nav>
+            <a href="#contact" class="btn-cta"><i class="fa-solid fa-paper-plane"></i> お問い合わせ</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+        <div class="hero-inner" data-aos="fade-up" data-aos-duration="1500">
+            <div class="container">
+                <p class="hero-kicker">FOR THE NEXT GENERATION</p>
+                <h1>人と環境を愛し、<br>次代の資源を創造する.</h1>
+                <p>解体から再資源化まで、一貫した技術で循環型社会の「要」となります。<br>私たちは、未来へつながる環境ソリューションを提供し続けます。</p>
+            </div>
+        </div>
+        <div class="news-ticker-hero">
+            <div class="container">
+                <span style="background: var(--accent); padding: 2px 10px; margin-right: 15px; font-weight: bold;">NEWS</span>
+                <span>2026.03.09 | 最新の「リサイクル技術センター」稼働状況を更新いたしました。</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01. RECYCLE FACILITY -->
+    <section id="recycle">
+        <div class="container" data-aos="fade-right">
+            <div class="section-header">
+                <p>RECYCLE FACILITY</p>
+                <h2>最高水準のリサイクル施設</h2>
+            </div>
+            <div class="facility-layout">
+                <div class="facility-text">
+                    <div class="tag-list">
+                        <span class="tag-item">中間処理施設</span>
+                        <span class="tag-item">高度選別技術</span>
+                        <span class="tag-item">再生骨材JIS規格</span>
+                    </div>
+                    <h3 style="font-size: 1.8rem; color: var(--primary); margin-bottom: 25px;">廃棄物を、最高品質の「資材」へ.</h3>
+                    <p style="margin-bottom: 30px; color: var(--text-light);">当社のリサイクル施設は、解体から発生するコンクリート、アスファルト、混合廃棄物を徹底的に選別、破砕します。特にコンクリートがれきの再資源化においては、独自の高度選別ラインにより不純物を極限まで除去。道路工事や建築基礎に使用される最高品質の再生骨材を生産しています。</p>
+                    <ul class="facility-features" style="font-weight: 700; color: var(--primary);">
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-check" style="color: var(--accent); margin-right: 10px;"></i> 年間XX万トンの処理能力を誇る大型プラント</li>
+                        <li style="margin-bottom: 15px;"><i class="fa-solid fa-check" style="color: var(--accent); margin-right: 10px;"></i> 光学選別システムによる高精度な素材抽出</li>
+                        <li><i class="fa-solid fa-check" style="color: var(--accent); margin-right: 10px;"></i> 全工程のトレーサビリティを完全管理</li>
+                    </ul>
+                </div>
+                <div class="facility-img">
+                    <img src="./img_waste.jpg" alt="リサイクル施設のパノラマビューと破砕プラントの様子">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02. SERVICE -->
+    <section id="service" style="background: var(--bg-gray);">
+        <div class="container" data-aos="fade-left">
+            <div class="section-header">
+                <p>OUR SERVICE</p>
+                <h2>環境を支える3つの柱</h2>
+            </div>
+            <div class="service-grid">
+                <div class="service-box">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <h3>産業廃棄物収集運搬</h3>
+                    <p>適切な分別知識を備えたドライバーが、最適な車両で回収に伺います。電子マニフェスト対応により透明性の高い管理を実現します。</p>
+                    <a href="recycle.html" class="btn-more">詳しく見る</a>
+                </div>
+                <div class="service-box">
+                    <i class="fa-solid fa-trowel-bricks"></i>
+                    <h3>建物・内装解体工事</h3>
+                    <p>建物の「終わり」は、新しい資源の「始まり」です。周辺環境への徹底した配慮と、分別を極限まで高める熟練の技術で安全・迅速に解体します。</p>
+                    <a href="demolition.html" class="btn-more">詳しく見る</a>
+                </div>
+                <div class="service-box">
+                    <i class="fa-solid fa-road"></i>
+                    <h3>土木工事・造成工事</h3>
+                    <p>解体後の土地を理想的な形へ。自社の再生資材を最大限に活用し、コストと環境負荷を抑えた高品質な施工を提供します。</p>
+                    <a href="civil.html" class="btn-more">詳しく見る</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02.5 LATEST PROJECTS (GALLERY PREVIEW) -->
+    <section id="gallery-preview" style="padding-top: 0;">
+        <div class="container" data-aos="fade-up">
+            <div class="section-header">
+                <p>WORKS GALLERY</p>
+                <h2>最新の施工実績</h2>
+            </div>
+            <div id="main-gallery-container" class="service-grid" style="background: none; border: none; gap: 30px;">
+                <!-- Data will be loaded via JS -->
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="gallery.html" class="btn-more" style="font-size: 1.1rem; border-color: var(--primary);">すべての実績を見る</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 03. CSR & SAFETY -->
+    <section id="csr" class="csr-bg">
+        <div class="container">
+            <div class="section-header">
+                <p>SUSTAINABILITY</p>
+                <h2>環境・安全への取り組み</h2>
+            </div>
+            <div class="csr-grid">
+                <div class="csr-card">
+                    <h4><i class="fa-solid fa-shield-heart"></i> 安全へのこだわり</h4>
+                    <p>「全従業員の健康とお客様の安心」を最優先に。毎月の安全会議実施と、最新の安全装備の導入により、無災害記録を更新し続けています。現場の安全性こそが信頼の証です。</p>
+                </div>
+                <div class="csr-card">
+                    <h4><i class="fa-solid fa-earth-asia"></i> 環境保護活動</h4>
+                    <p>リサイクル率の向上はもちろん、低騒音・低振動重機の導入や、排出ガス規制適合車両の採用など、地域環境に与える影響を最小限に抑える努力を惜しみません。</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 60px;">
+                <p style="font-weight: 700; color: var(--primary);">私たちは、SDGs（持続可能な開発目標）の達成に真剣に取り組んでいます。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 03.5 NEWS SECTION -->
+    <section id="news-section" style="background: #fff; padding: 100px 0;">
+        <div class="container">
+            <div class="section-header">
+                <p>NEWS & TOPICS</p>
+                <h2>お知らせ</h2>
+            </div>
+            <div id="news-list-container" style="max-width: 900px; margin: 0 auto;">
+                <!-- News items will be loaded here -->
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <p style="font-size: 0.9rem; color: var(--text-light); opacity: 0.7;">※ 過去のお知らせは順次更新されます。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 04. COMPANY -->
+    <section id="company">
+        <div class="container">
+            <div class="section-header">
+                <p>COMPANY PROFILE</p>
+                <h2>会社案内</h2>
+            </div>
+            <div class="company-grid">
+                <div>
+                    <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 10px;">代表挨拶</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-light); line-height: 2;">「敬愛」の名の下に、人と社会、そして地球環境を尊重する心を大切にしてまいりました。解体・リサイクルという事業を通じて、有限な資源の循環を支え、次世代により良い未来を残すことが私たちの使命です。これからも技術の研鑽を重ね、地域社会に貢献する企業であることをお約束いたします。</p>
+                </div>
+                <table class="company-table">
+                    <tr>
+                        <th>商号</th>
+                        <td>株式会社 Next plus tokyo</td>
+                    </tr>
+                    <tr>
+                        <th>設立</th>
+                        <td>2025年7月6日</td>
+                    </tr>
+                    <tr>
+                        <th>事業内容</th>
+                        <td>産業廃棄物処理事業, 総合解体工事, 一般土木工事</td>
+                    </tr>
+                    <tr>
+                        <th>所在地</th>
+                        <td>神奈川県川崎市高津区久本3-16-15</td>
+                    </tr>
+                    <tr>
+                        <th>許認可</th>
+                        <td>産業廃棄物収集運搬業 許可番号 第XXXXX号<br>建設業許可番号 〇〇県知事 (般-X) 第XXXXX号</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 05. CONTACT -->
+    <section id="contact" style="background: var(--bg-gray);">
+        <div class="container">
+            <div class="section-header">
+                <p>GET IN TOUCH</p>
+                <h2>お問い合わせ</h2>
+            </div>
+            <div class="contact-area">
+                <p style="text-align: center; margin-bottom: 50px; color: var(--text-light); font-size: 0.95rem;">お見積りのご依頼や、施設見学の相談などお気軽にお問い合わせください。<br>担当者が内容を確認の上、1〜2営業日以内にご連絡差し上げます。</p>
+                <form id="contactForm" onsubmit="event.preventDefault(); submitInquiry();">
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">お名前<span>必須</span></label>
+                            <input type="text" id="cName" class="form-input" placeholder="例：山田 太郎" required>
+                        </div>
+                        <div>
+                            <label class="form-label">会社名</label>
+                            <input type="text" id="cCompany" class="form-input" placeholder="例：株式会社〇〇">
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">メールアドレス<span>必須</span></label>
+                            <input type="email" id="cEmail" class="form-input" placeholder="例：example@mail.com" required>
+                        </div>
+                        <div>
+                            <label class="form-label">お電話番号<span>必須</span></label>
+                            <input type="tel" id="cPhone" class="form-input" placeholder="例：090-1234-5678" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">お問い合わせ種別<span>必須</span></label>
+                        <select id="cType" class="form-input" required>
+                            <option value="">選択してください</option>
+                            <option value="解体工事の見積依頼">解体工事の見積依頼</option>
+                            <option value="リサイクル施設・受入について">リサイクル施設・受入について</option>
+                            <option value="収集運搬のご相談">収集運搬のご相談</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">メッセージ内容<span>必須</span></label>
+                        <textarea id="cMessage" class="form-input" rows="6" placeholder="具体的なご相談内容をご記入ください。" required></textarea>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn-cta" style="margin: 0 auto; width: 300px; justify-content: center; font-size: 1.1rem; padding: 20px;">
+                            送信内容を確認する
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <img src="logo.png" alt="Next plus tokyo logo" style="height:30px; width:auto;">
+                    </div>
+                    <p style="opacity: 0.8;">人と社会に敬愛を。循環型社会の未来を。 <br>株式会社 Next plus tokyoは持続可能な環境づくりを支援します。</p>
+                    <div style="margin-top: 20px; font-size: 0.9rem;">
+                        <i class="fa-solid fa-phone" style="color: var(--accent); margin-right: 10px;"></i> 044-833-0022
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h5>ABOUT</h5>
+                    <ul>
+                        <li><a href="#home">ホーム</a></li>
+                        <li><a href="#company">会社案内</a></li>
+                        <li><a href="#csr">CSR・環境方針</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h5>SERVICE</h5>
+                    <ul>
+                        <li><a href="recycle.html">リサイクル施設</a></li>
+                        <li><a href="demolition.html">解体工事</a></li>
+                        <li><a href="civil.html">土木・造成</a></li>
+                        <li><a href="gallery.html" style="color: var(--accent); font-weight: bold;">施工実績・ギャラリー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h5>SUPPORT</h5>
+                    <ul>
+                        <li><a href="#contact">お問い合わせ</a></li>
+                        <li><a href="javascript:void(0)" onclick="adminLogin()" style="opacity: 0.3;">ADMIN</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Next plus tokyo. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Library JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Admin Login
+        function adminLogin() {
+            location.href = "admin.html";
+        }
+
+        // API URL Helper
+        // API URL Helper (Handles both web server and local file execution)
+        const API_BASE = (window.location.protocol === 'file:') 
+            ? 'http://localhost:3000' 
+            : (window.location.protocol + "//" + window.location.hostname + ":3000");
+
+        // News Section Loading
+        const parseFileUrls = (fileUrlsRaw, fallbackFileUrl) => {
+            if (Array.isArray(fileUrlsRaw)) return fileUrlsRaw.filter(Boolean);
+            if (typeof fileUrlsRaw === 'string' && fileUrlsRaw.trim()) {
+                try {
+                    const parsed = JSON.parse(fileUrlsRaw);
+                    if (Array.isArray(parsed)) return parsed.filter(Boolean);
+                } catch (e) {
+                    return [fileUrlsRaw];
+                }
+            }
+            return fallbackFileUrl ? [fallbackFileUrl] : [];
+        };
+
+        const isImageUrl = (url) => {
+            if (!url) return false;
+            const clean = String(url).replace(/\\/g, '/').split('?')[0].split('#')[0];
+            return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(clean);
+        };
+
+        const toApiUrl = (url) => {
+            if (!url) return '';
+            const normalized = String(url).replace(/\\/g, '/');
+            if (/^https?:\/\//i.test(normalized)) return normalized;
+            if (normalized.startsWith('/')) return `${API_BASE}${normalized}`;
+            return `${API_BASE}/${normalized}`;
+        };
+
+        fetch(`${API_BASE}/api/news`)
+            .then(res => res.json())
+            .then(data => {
+                // Ticker (Hero)
+                if (data.length > 0) {
+                    const ticker = document.querySelector('.news-ticker-hero span:last-child');
+                    ticker.textContent = `${data[0].date} | ${data[0].title}`;
+                }
+                
+                // News List Section
+                const listContainer = document.getElementById('news-list-container');
+                const latestNews = data.slice(0, 5); // Show latest 5
+                
+                if (latestNews.length === 0) {
+                    listContainer.innerHTML = '<p style="text-align:center; opacity:0.5; padding:20px;">現在、新しいお知らせはありません。</p>';
+                    return;
+                }
+                
+                latestNews.forEach(item => {
+                    const files = parseFileUrls(item.file_urls, item.file_url);
+                    const imageCandidates = [item.thumbnail_url, item.file_url].concat(files);
+                    const imageThumb = imageCandidates.find(isImageUrl) || '';
+                    const docs = files.filter(u => !isImageUrl(u));
+
+                    const thumbHtml = imageThumb
+                        ? `<img src="${toApiUrl(imageThumb)}" alt="thumb" style="width:120px;height:76px;object-fit:cover;border-radius:6px;margin-right:14px;">`
+                        : '';
+
+                    const docsHtml = docs.length
+                        ? docs.map(u => `<a href="${toApiUrl(u)}" target="_blank" download style="display:inline-block; margin-top:8px; margin-right:8px; padding:5px 14px; background:var(--accent); color:white; border-radius:4px; font-size:0.8rem; text-decoration:none; font-weight:bold;">📄 ダウンロード</a>`).join('')
+                        : '';
+
+                    const youtubeHtml = item.youtube_url
+                        ? `<a href="${item.youtube_url}" target="_blank" style="display:inline-block; margin-top:8px; padding:5px 14px; background:#e53935; color:white; border-radius:4px; font-size:0.8rem; text-decoration:none; font-weight:bold;">YouTube</a>`
+                        : '';
+
+                    const newsHtml = `
+                        <div style="display: flex; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #eee; transition: 0.3s; cursor: default;">
+                            <div style="min-width: 120px; font-weight: 700; color: var(--accent); font-size: 0.9rem; padding-top: 4px;">${item.date}</div>
+                            <div style="display:flex; flex-grow:1;">
+                                ${thumbHtml}
+                                <div style="flex-grow: 1;">
+                                    <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 5px;">${item.title}</h4>
+                                    <p style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5; margin: 0;">${item.content || ""}</p>
+                                    <div>${docsHtml}${youtubeHtml}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.innerHTML += newsHtml;
+                });
+            });
+
+        // Load Site Settings
+        fetch(`${API_BASE}/api/settings`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.site_title) {
+                    document.title = `${data.site_title} | 環境ソリューション・解体・リサイクルのプロフェッショナル`;
+                }
+            });
+
+        // Main Gallery Preview Loading
+        fetch(`${API_BASE}/api/gallery`)
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('main-gallery-container');
+                const latest = data.slice(0, 3); // Show latest 3
+                latest.forEach(item => {
+                    const html = `
+                        <div class="service-box" style="padding: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left;">
+                            <img src="${item.image_url}" style="width: 100%; height: 200px; object-fit: cover;">
+                            <div style="padding: 20px;">
+                                <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 5px;">${item.date} [${item.category}]</div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0;">${item.title}</h3>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+            });
+
+        // Contact Form Submission
+        function submitInquiry() {
+            const payload = {
+                name: document.getElementById('cName').value,
+                company: document.getElementById('cCompany').value,
+                email: document.getElementById('cEmail').value,
+                phone: document.getElementById('cPhone').value,
+                type: document.getElementById('cType').value,
+                message: document.getElementById('cMessage').value
+            };
+
+            fetch(`${API_BASE}/api/contacts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(data => {
+                alert("お問い合わせいただきありがとうございます。内容が正常に送信されました。");
+                document.getElementById('contactForm').reset();
+            }).catch(err => {
+                alert("送信に失敗しました。もう一度お試しください。");
+            });
+        }
+    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDoPIQ0yrldC04436XKEClm3Ey5uYRPbww",
+          authDomain: "naho-6c29a.firebaseapp.com",
+          projectId: "naho-6c29a",
+          storageBucket: "naho-6c29a.firebasestorage.app",
+          messagingSenderId: "1086480379401",
+          appId: "1:1086480379401:web:bfa3f81d3bf9199da252d8",
+          measurementId: "G-T82WQM5FR3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        console.log("Firebase initialized successfully with Analytics.");
+    </script>
+</body>
+</html>

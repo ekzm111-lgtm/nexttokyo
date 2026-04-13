@@ -1,0 +1,1191 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者パネル | 株式会社 Next plus tokyo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #003366; --accent: #4CAF50; --bg: #f0f2f5; --sidebar-w: 240px; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* Sidebar Styling */
+        .sidebar { width: var(--sidebar-w); background: var(--primary); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; transition: 0.3s; }
+        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h1 { font-size: 1.2rem; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; color: rgba(255,255,255,0.7); }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: #fff; border-left: 4px solid var(--accent); }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* Main Content Styling */
+        .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px; }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .dashboard-link-card { transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+        .dashboard-link-card:hover {
+            background: #f3f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,45,89,0.12);
+        }
+        .section-title { font-size: 1.5rem; color: var(--primary); margin-bottom: 25px; border-left: 5px solid var(--accent); padding-left: 15px; }
+
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; margin-bottom: 15px; }
+        button { background: var(--primary); color: #fff; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: bold; transition: 0.3s; }
+        button:hover { background: var(--accent); }
+        .btn-upload { background: var(--accent); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; vertical-align: top; }
+        th { background: #f8f9fa; }
+        .inquiry-table th, .inquiry-table td { white-space: normal; word-break: break-word; }
+        .inquiry-name { font-weight: 700; color: var(--primary); }
+        .inquiry-sub { display: block; margin-top: 4px; color: #6b7280; font-size: 0.78rem; }
+        .inquiry-message { min-width: 260px; line-height: 1.6; }
+        .preview-img { width: 80px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .btn-delete { background: #ff4d4d; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-delete:hover { background: #cc0000; }
+        .list-tools { margin-bottom: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .search-wrap { position: relative; max-width: 420px; }
+        .category-select {
+            width: 220px;
+            min-width: 180px;
+            padding: 10px 12px;
+            border: 1px solid #dbe3ea;
+            border-radius: 8px;
+            margin: 0;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+        .search-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 34px;
+            border: 1px solid #dbe3ea;
+            border-radius: 8px;
+            margin: 0;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+        .auth-gate { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .auth-card { width: min(420px, 92vw); background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+        .auth-card h3 { margin-bottom: 16px; color: var(--primary); }
+        .auth-help { font-size: 0.8rem; color: #666; margin-top: 6px; }
+        .admin-mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            z-index: 220;
+            background: #fff;
+            color: var(--primary);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            padding: 0;
+        }
+        .admin-mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 180;
+            transition: 0.2s ease;
+        }
+        body.sidebar-open .admin-mobile-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        @media (max-width: 992px) {
+            body { display: block; }
+            .admin-mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .sidebar {
+                transform: translateX(-100%);
+                width: min(82vw, 320px);
+                z-index: 200;
+            }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+            .main-content {
+                margin-left: 0;
+                padding: 72px 14px 20px;
+            }
+            .card { padding: 16px; margin-bottom: 16px; overflow-x: auto; }
+            .section-title { font-size: 1.25rem; margin-bottom: 14px; }
+            table { min-width: 680px; }
+            button { padding: 10px 14px; }
+            .auth-card { padding: 18px; }
+            [style*='grid-template-columns: repeat(3, 1fr)'] { grid-template-columns: 1fr !important; }
+            [style*='grid-template-columns:3fr 1fr'] { grid-template-columns: 1fr !important; }
+            [style*='grid-template-columns:2fr 1fr 1fr'] { grid-template-columns: 1fr !important; }
+            [style*='grid-template-columns: 1fr 1fr auto'] { grid-template-columns: 1fr !important; }
+            [style*='display:flex; gap:10px; margin-bottom:10px;'] { flex-wrap: wrap; }
+            .sidebar-footer button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="adminAuthGate" class="auth-gate">
+        <div class="auth-card">
+            <h3>管理者ログイン</h3>
+            <label>管理者ID</label>
+            <input type="text" id="authAdminId" placeholder="IDを入力してください">
+            <label>パスワード</label>
+            <input type="password" id="authAdminPw" placeholder="パスワードを入力してください">
+            <button type="button" onclick="loginAdmin()" style="width:100%;">ログイン</button>
+            <p class="auth-help">初期アカウント: ID `1111` / PW `1111`</p>
+            <p id="authError" style="font-size:0.85rem; color:#d32f2f; margin-top:8px;"></p>
+        </div>
+    </div>
+    <button type="button" class="admin-mobile-toggle" aria-label="メニュー" onclick="toggleMobileSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="admin-mobile-overlay" onclick="closeMobileSidebar()"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <img src="logo-01.png" alt="logo" style="height:32px; width:auto;">
+                <div style="text-align: left; line-height: 1.2;">
+                    <div style="font-size: 0.6rem; opacity: 0.8; font-weight: 400;">株式会社</div>
+                    <div style="font-size: 1rem;">Next plus tokyo</div>
+                </div>
+            </h1>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" onclick="showSection('dashboard', this)"><i class="fa-solid fa-chart-line"></i> ダッシュボード</div>
+            <div class="menu-item" onclick="showSection('inquiry', this)"><i class="fa-solid fa-envelope"></i> お問い合わせ管理</div>
+            <div class="menu-item" onclick="showSection('news', this)"><i class="fa-solid fa-bullhorn"></i> お知らせ管理</div>
+            <div class="menu-item" onclick="showSection('gallery', this)"><i class="fa-solid fa-images"></i> 施工実績管理</div>
+            <div class="menu-item" onclick="showSection('settings', this)"><i class="fa-solid fa-gear"></i> システム設定</div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.9rem;"><i class="fa-solid fa-arrow-left"></i> サイトへ戻る</a>
+            <button type="button" onclick="logoutAdmin()" style="margin-top:10px; width:100%; background:#d32f2f;">ログアウト</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <section id="dashboard" class="page-section active">
+            <h2 class="section-title">ダッシュボード</h2>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+                <div class="card dashboard-link-card" role="link" tabindex="0" onclick="showSection('inquiry')" onkeydown="if(event.key==='Enter'){showSection('inquiry');}" style="text-align:center; cursor:pointer;"><i class="fa-solid fa-envelope" style="font-size:2rem; color:var(--accent);"></i><p style="margin-top:10px;">お問い合わせ件数</p><h3 id="countInquiry" style="font-size:2rem;">-</h3></div>
+                <div class="card dashboard-link-card" role="link" tabindex="0" onclick="showSection('news')" onkeydown="if(event.key==='Enter'){showSection('news');}" style="text-align:center; cursor:pointer;"><i class="fa-solid fa-bullhorn" style="font-size:2rem; color:var(--primary);"></i><p style="margin-top:10px;">お知らせ件数</p><h3 id="countNews" style="font-size:2rem;">-</h3></div>
+                <div class="card dashboard-link-card" role="link" tabindex="0" onclick="showSection('gallery')" onkeydown="if(event.key==='Enter'){showSection('gallery');}" style="text-align:center; cursor:pointer;"><i class="fa-solid fa-images" style="font-size:2rem; color:orange;"></i><p style="margin-top:10px;">実績件数</p><h3 id="countGallery" style="font-size:2rem;">-</h3></div>
+            </div>
+            <div class="card">
+                <h3>お問い合わせ管理</h3>
+                <div id="dashboardInquiryList">読み込み中...</div>
+            </div>
+        </section>
+
+        <section id="inquiry" class="page-section">
+            <h2 class="section-title">お問い合わせ管理</h2>
+            <div class="card">
+                <div class="list-tools">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="search-input" placeholder="お問い合わせ検索" oninput="setListSearch('inquiry', this.value)">
+                    </div>
+                </div>
+                <div id="inquiryList">読み込み中...</div>
+            </div>
+        </section>
+
+        <section id="news" class="page-section">
+            <h2 class="section-title">お知らせ管理</h2>
+            <div class="card" style="background:#fdfdfd; border:1px solid #e0e0e0;">
+                <h3 id="newsFormTitle" style="margin-bottom:20px;">新規お知らせ作成</h3>
+                <form id="newsForm">
+                    <input type="hidden" id="editNewsId">
+                    <div style="display:grid; grid-template-columns:3fr 1fr; gap:20px;">
+                        <div>
+                            <label>タイトル</label>
+                            <input type="text" id="newsTitle" placeholder="お知らせのタイトルを入力してください" required>
+                        </div>
+                        <div>
+                            <label>日付</label>
+                            <input type="text" id="newsDate" value="2026.03.11" required>
+                        </div>
+                    </div>
+                    <label>内容（詳細）</label>
+                    <textarea id="newsContent" rows="4" placeholder="詳細内容を入力してください（任意）"></textarea>
+                    <label>添付ファイル（PDF・資料など）</label>
+                    <div id="newsUploadList">
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <input type="file" id="newsFile" style="width:auto;">
+                            <button type="button" class="btn-upload" onclick="uploadNewsFile('newsFile')">アップロード</button>
+                            <button type="button" style="background:#666;" onclick="addNewsFileInput()">+</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="newsFileUrl" value="">
+                    <input type="hidden" id="newsFileUrls" value="[]">
+                    <p id="newsFileStatus" style="font-size:0.8rem; color:var(--accent); margin-bottom:15px;"></p>
+                    <div id="newsUploadedFiles" style="font-size:0.8rem; color:#666; margin-bottom:15px;"></div>
+                    <button type="button" id="btnNewsSubmit" onclick="addNews()">お知らせを登録</button>
+                    <button type="button" id="btnNewsCancel" onclick="resetNewsForm()" style="display:none; background:#999; margin-left:10px;">キャンセル</button>
+                </form>
+            </div>
+            <div class="card">
+                <h3>登録済みのお知らせ一覧</h3>
+                <div class="list-tools">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="search-input" placeholder="お知らせ検索" oninput="setListSearch('news', this.value)">
+                    </div>
+                </div>
+                <div id="newsList"></div>
+            </div>
+        </section>
+
+        <section id="gallery" class="page-section">
+            <h2 class="section-title">施工実績管理</h2>
+            <div class="card" style="background:#fdfdfd; border:1px solid #e0e0e0;">
+                <h3 id="galFormTitle" style="margin-bottom:20px;">施工実績作成</h3>
+                <form id="galleryForm">
+                    <input type="hidden" id="editGalId">
+                    <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:15px;">
+                        <div>
+                            <label>タイトル</label>
+                            <input type="text" id="galTitle" placeholder="タイトルを入力してください" required>
+                        </div>
+                        <div>
+                            <label>日付</label>
+                            <input type="text" id="galDate" value="2026.03.11" required>
+                        </div>
+                        <div>
+                            <label>カテゴリ</label>
+                            <select id="galCategory">
+                                <option value="設備工事">設備工事</option>
+                                <option value="土木工事">土木工事</option>
+                                <option value="解体工事">解体工事</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <label>写真アップロード</label>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="file" id="galFile" accept="image/*" style="width:auto;">
+                        <button type="button" class="btn-upload" onclick="uploadImage()">アップロード</button>
+                    </div>
+                    <input type="hidden" id="galUrl" value="">
+                    <p id="uploadStatus" style="font-size:0.8rem; color:var(--accent); margin-bottom:15px;"></p>
+                    <button type="button" id="btnGalSubmit" onclick="addGallery()">実績を登録</button>
+                    <button type="button" id="btnGalCancel" onclick="resetGalForm()" style="display:none; background:#999; margin-left:10px;">キャンセル</button>
+                </form>
+            </div>
+            <div class="card">
+                <h3>登録済みの実績一覧</h3>
+                <div class="list-tools">
+                    <select id="galleryCategoryFilter" class="category-select" onchange="setListCategory('gallery', this.value)">
+                        <option value="">カテゴリ: 全て</option>
+                    </select>
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="search-input" placeholder="実績検索" oninput="setListSearch('gallery', this.value)">
+                    </div>
+                </div>
+                <div id="galleryList"></div>
+            </div>
+        </section>
+
+        <section id="settings" class="page-section">
+            <h2 class="section-title">システム設定</h2>
+            <div class="card">
+                <form id="settingsForm">
+                    <div class="form-group">
+                        <label>サイトタイトル</label>
+                        <input type="text" id="setSiteTitle" placeholder="株式会社 Next plus tokyo">
+                    </div>
+                    <div class="form-group">
+                        <label>管理メールアドレス</label>
+                        <input type="email" id="setContactEmail" placeholder="example@mail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>メインカラー (Hex)</label>
+                        <input type="text" id="setMainColor" placeholder="#003366">
+                    </div>
+                    <button type="button" onclick="saveSettings()">設定を保存</button>
+                </form>
+            </div>
+            <div class="card">
+                <h3 id="adminAccountTitle" style="margin-bottom:16px;">管理者アカウント管理</h3>
+                <div style="display:grid; grid-template-columns: 1fr 1fr auto; gap:10px; align-items:end;">
+                    <div>
+                        <label>新規ID</label>
+                        <input type="text" id="newAdminId" placeholder="例: manager01">
+                    </div>
+                    <div>
+                        <label>新規パスワード</label>
+                        <input type="password" id="newAdminPw" placeholder="パスワード">
+                    </div>
+                    <div>
+                        <button type="button" id="btnAdminSubmit" onclick="saveAdminAccount()">追加</button>
+                        <button type="button" id="btnAdminCancel" onclick="resetAdminForm()" style="display:none; background:#999; margin-top:8px;">キャンセル</button>
+                    </div>
+                </div>
+                <div id="adminAccountsList" style="margin-top:14px;"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol === 'file:')
+            ? 'http://localhost:3000'
+            : window.location.origin;
+
+        const PAGE_SIZE = 20;
+        const listPage = { inquiry: 1, news: 1, gallery: 1 };
+        const listSearch = { inquiry: '', news: '', gallery: '' };
+        const listCategory = { inquiry: '', news: '', gallery: '' };
+        window.newsData = [];
+        window.galleryData = [];
+        let inquiriesData = [];
+        let editingAdminId = '';
+        const ADMIN_ACCOUNTS_KEY = 'admin_accounts';
+        const ADMIN_SESSION_KEY = 'admin_logged_in_user';
+
+        function getAdminAccounts() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(ADMIN_ACCOUNTS_KEY) || '[]');
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function setAdminAccounts(accounts) {
+            localStorage.setItem(ADMIN_ACCOUNTS_KEY, JSON.stringify(accounts));
+        }
+
+        function ensureDefaultAdmin() {
+            const accounts = getAdminAccounts();
+            const idx = accounts.findIndex(a => a.id === '1111');
+            if (idx === -1) {
+                accounts.push({ id: '1111', pw: '1111' });
+            } else {
+                accounts[idx].pw = '1111';
+            }
+            setAdminAccounts(accounts);
+        }
+
+        function isLoggedIn() {
+            return !!localStorage.getItem(ADMIN_SESSION_KEY);
+        }
+
+        function showAuthGate(show) {
+            const gate = document.getElementById('adminAuthGate');
+            if (!gate) return;
+            gate.style.display = show ? 'flex' : 'none';
+        }
+
+        function loginAdmin() {
+            const id = (document.getElementById('authAdminId').value || '').trim();
+            const pw = document.getElementById('authAdminPw').value || '';
+            const err = document.getElementById('authError');
+            const ok = getAdminAccounts().some(a => a.id === id && a.pw === pw);
+            if (!ok) {
+                if (err) err.textContent = 'IDまたはパスワードが正しくありません。';
+                return;
+            }
+            localStorage.setItem(ADMIN_SESSION_KEY, id);
+            if (err) err.textContent = '';
+            showAuthGate(false);
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem(ADMIN_SESSION_KEY);
+            showAuthGate(true);
+        }
+
+        function toggleMobileSidebar() {
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        function closeMobileSidebar() {
+            document.body.classList.remove('sidebar-open');
+        }
+
+        function saveAdminAccount() {
+            const idEl = document.getElementById('newAdminId');
+            const pwEl = document.getElementById('newAdminPw');
+            const id = (idEl.value || '').trim();
+            const pw = pwEl.value || '';
+            if (!id || !pw) {
+                alert('IDとパスワードを入力してください。');
+                return;
+            }
+            const accounts = getAdminAccounts();
+            const duplicate = accounts.some(a => a.id === id && a.id !== editingAdminId);
+            if (duplicate) {
+                alert('同じIDが既に存在します。');
+                return;
+            }
+
+            if (!editingAdminId) {
+                accounts.push({ id, pw });
+            } else {
+                const idx = accounts.findIndex(a => a.id === editingAdminId);
+                if (idx === -1) {
+                    alert('編集対象のアカウントが見つかりません。');
+                    resetAdminForm();
+                    return;
+                }
+                accounts[idx] = { id, pw };
+
+                const loggedIn = localStorage.getItem(ADMIN_SESSION_KEY);
+                if (loggedIn === editingAdminId) {
+                    localStorage.setItem(ADMIN_SESSION_KEY, id);
+                }
+            }
+            setAdminAccounts(accounts);
+            resetAdminForm();
+            renderAdminAccounts();
+        }
+
+        function removeAdminAccount(id) {
+            if (id === '1111') {
+                alert('初期管理者は削除できません。');
+                return;
+            }
+            const next = getAdminAccounts().filter(a => a.id !== id);
+            setAdminAccounts(next);
+            if (editingAdminId === id) {
+                resetAdminForm();
+            }
+            renderAdminAccounts();
+        }
+
+        function startEditAdminAccount(id) {
+            if (id === '1111') {
+                alert('初期管理者は編集できません。');
+                return;
+            }
+            const account = getAdminAccounts().find(a => a.id === id);
+            if (!account) {
+                alert('アカウントが見つかりません。');
+                return;
+            }
+            editingAdminId = id;
+            document.getElementById('newAdminId').value = account.id || '';
+            document.getElementById('newAdminPw').value = account.pw || '';
+            document.getElementById('btnAdminSubmit').textContent = '保存';
+            document.getElementById('btnAdminCancel').style.display = 'inline-block';
+            document.getElementById('adminAccountTitle').textContent = '管理者アカウント編集';
+        }
+
+        function resetAdminForm() {
+            editingAdminId = '';
+            document.getElementById('newAdminId').value = '';
+            document.getElementById('newAdminPw').value = '';
+            document.getElementById('btnAdminSubmit').textContent = '追加';
+            document.getElementById('btnAdminCancel').style.display = 'none';
+            document.getElementById('adminAccountTitle').textContent = '管理者アカウント管理';
+        }
+
+        function renderAdminAccounts() {
+            const el = document.getElementById('adminAccountsList');
+            if (!el) return;
+            const rows = getAdminAccounts();
+            let html = '<table><tr><th>ID</th><th>管理</th></tr>';
+            rows.forEach(a => {
+                if (a.id === '1111') {
+                    html += `<tr><td>${a.id}</td><td>-</td></tr>`;
+                } else {
+                    html += `<tr><td>${a.id}</td><td><button type="button" onclick='startEditAdminAccount(${JSON.stringify(a.id)})' style="background:var(--accent); color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;"><i class="fa-solid fa-pen-to-square"></i></button><button type="button" class="btn-delete" onclick='removeAdminAccount(${JSON.stringify(a.id)})'><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                }
+            });
+            html += '</table>';
+            el.innerHTML = html;
+        }
+
+        function showSection(id, el) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            if (el) el.classList.add('active');
+            if (window.innerWidth <= 992) closeMobileSidebar();
+
+            if (id === 'dashboard') loadDashboard();
+            if (id === 'inquiry') loadInquiries();
+            if (id === 'news') loadNews();
+            if (id === 'gallery') loadGallery();
+            if (id === 'settings') loadSettings();
+        }
+
+        function sortByRecent(arr) {
+            return (arr || []).slice().sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
+        }
+
+        function normalizeFileUrls(fileUrlsRaw, fallbackFileUrl) {
+            if (Array.isArray(fileUrlsRaw)) return fileUrlsRaw.filter(Boolean);
+            if (typeof fileUrlsRaw === 'string' && fileUrlsRaw.trim()) {
+                try {
+                    const parsed = JSON.parse(fileUrlsRaw);
+                    if (Array.isArray(parsed)) return parsed.filter(Boolean);
+                } catch (e) {
+                    return [fileUrlsRaw];
+                }
+            }
+            return fallbackFileUrl ? [fallbackFileUrl] : [];
+        }
+
+        function isImageUrl(url) {
+            if (!url) return false;
+            const clean = String(url).replace(/\\/g, '/').split('?')[0].split('#')[0];
+            return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(clean);
+        }
+
+        function toApiUrl(url) {
+            if (!url) return '';
+            const normalized = String(url).replace(/\\/g, '/');
+            if (/^https?:\/\//i.test(normalized)) return normalized;
+            if (normalized.startsWith('/')) return `${API_BASE}${normalized}`;
+            return `${API_BASE}/${normalized}`;
+        }
+
+        function ensureValidPage(type, totalCount) {
+            const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+            if (listPage[type] > totalPages) listPage[type] = totalPages;
+            if (listPage[type] < 1) listPage[type] = 1;
+            return totalPages;
+        }
+
+        function pageSlice(arr, page) {
+            const start = (page - 1) * PAGE_SIZE;
+            return arr.slice(start, start + PAGE_SIZE);
+        }
+
+        function setListSearch(type, value) {
+            listSearch[type] = String(value || '').trim().toLowerCase();
+            listPage[type] = 1;
+            if (type === 'inquiry') renderInquiries();
+            if (type === 'news') renderNews();
+            if (type === 'gallery') renderGallery();
+        }
+
+        function setListCategory(type, value) {
+            listCategory[type] = String(value || '').trim();
+            listPage[type] = 1;
+            if (type === 'gallery') renderGallery();
+        }
+
+        function populateGalleryCategoryOptions() {
+            const sel = document.getElementById('galleryCategoryFilter');
+            if (!sel) return;
+            const current = listCategory.gallery || '';
+            const unique = Array.from(new Set((window.galleryData || []).map(x => (x.category || '').trim()).filter(Boolean))).sort();
+            const opts = ['<option value="">カテゴリ: 全て</option>']
+                .concat(unique.map(c => `<option value="${c}">${c}</option>`));
+            sel.innerHTML = opts.join('');
+            sel.value = current;
+        }
+
+        function buildPager(type, totalCount, renderFn) {
+            const totalPages = ensureValidPage(type, totalCount);
+            if (totalCount <= PAGE_SIZE) return '';
+            let html = '<div style="margin-top:12px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">';
+            html += `<button type="button" onclick="${renderFn}(${Math.max(1, listPage[type] - 1)})" ${listPage[type] === 1 ? 'disabled' : ''} style="padding:6px 10px;">前へ</button>`;
+            for (let p = 1; p <= totalPages; p++) {
+                const active = p === listPage[type];
+                html += `<button type="button" onclick="${renderFn}(${p})" style="padding:6px 10px; ${active ? 'background:var(--accent);' : ''}">${p}</button>`;
+            }
+            html += `<button type="button" onclick="${renderFn}(${Math.min(totalPages, listPage[type] + 1)})" ${listPage[type] === totalPages ? 'disabled' : ''} style="padding:6px 10px;">次へ</button>`;
+            html += '</div>';
+            return html;
+        }
+
+        function loadDashboard() {
+            fetch(`${API_BASE}/api/admin/contacts`).then(r => r.json()).then(d => {
+                const sorted = sortByRecent(d || []);
+                document.getElementById('countInquiry').textContent = sorted.length;
+                renderDashboardInquiryList(sorted.slice(0, 10));
+            });
+            fetch(`${API_BASE}/api/news`).then(r => r.json()).then(d => document.getElementById('countNews').textContent = (d || []).length);
+            fetch(`${API_BASE}/api/gallery`).then(r => r.json()).then(d => document.getElementById('countGallery').textContent = (d || []).length);
+        }
+
+        function renderDashboardInquiryList(rows) {
+            const div = document.getElementById('dashboardInquiryList');
+            if (!div) return;
+            if (!rows || rows.length === 0) {
+                div.innerHTML = '<p style="opacity:.6;">お問い合わせはありません。</p>';
+                return;
+            }
+            let html = '<table class="inquiry-table"><tr><th>日付</th><th>氏名</th><th>会社名</th><th>電話番号</th><th>メール</th><th>種別</th><th>内容</th><th>管理</th></tr>';
+            rows.forEach(x => {
+                html += `<tr>
+                    <td>${x.date ? x.date.split(' ')[0] : '-'}</td>
+                    <td><span class="inquiry-name">${x.name || '-'}</span></td>
+                    <td>${x.company || '-'}</td>
+                    <td>${x.phone || '-'}</td>
+                    <td><a href="mailto:${x.email || ''}" style="color:var(--primary); text-decoration:none;">${x.email || '-'}</a></td>
+                    <td>${x.type || '-'}</td>
+                    <td class="inquiry-message">${(x.message || '').replace(/\n/g, '<br>') || '-'}</td>
+                    <td><button class="btn-delete" onclick="deleteItem('contacts', ${x.id})"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            });
+            html += '</table>';
+            div.innerHTML = html;
+        }
+
+        function loadInquiries() {
+            fetch(`${API_BASE}/api/admin/contacts`).then(r => r.json()).then(data => {
+                inquiriesData = sortByRecent(data || []);
+                renderInquiries();
+            });
+        }
+
+        function renderInquiries(page) {
+            if (typeof page === 'number') listPage.inquiry = page;
+            const div = document.getElementById('inquiryList');
+            const q = listSearch.inquiry;
+            const filtered = q
+                ? inquiriesData.filter(x => `${x.date || ''} ${x.name || ''} ${x.company || ''} ${x.phone || ''} ${x.email || ''} ${x.type || ''} ${x.message || ''}`.toLowerCase().includes(q))
+                : inquiriesData;
+            const total = filtered.length;
+            ensureValidPage('inquiry', total);
+            if (total === 0) { div.innerHTML = '<p style="opacity:.6;">お問い合わせはありません。</p>'; return; }
+            const rows = pageSlice(filtered, listPage.inquiry);
+            let html = '<table class="inquiry-table"><tr><th>日付</th><th>氏名</th><th>会社名</th><th>電話番号</th><th>メール</th><th>種別</th><th>内容</th><th>管理</th></tr>';
+            rows.forEach(x => {
+                html += `<tr>
+                    <td>${x.date ? x.date.split(' ')[0] : '-'}</td>
+                    <td><span class="inquiry-name">${x.name || '-'}</span></td>
+                    <td>${x.company || '-'}</td>
+                    <td>${x.phone || '-'}</td>
+                    <td><a href="mailto:${x.email || ''}" style="color:var(--primary); text-decoration:none;">${x.email || '-'}</a></td>
+                    <td>${x.type || '-'}</td>
+                    <td class="inquiry-message">${(x.message || '').replace(/\n/g, '<br>') || '-'}</td>
+                    <td><button class="btn-delete" onclick="deleteItem('contacts', ${x.id})"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            });
+            html += '</table>' + buildPager('inquiry', total, 'renderInquiries');
+            div.innerHTML = html;
+        }
+
+        function loadNews() {
+            fetch(`${API_BASE}/api/news`).then(r => r.json()).then(data => {
+                window.newsData = sortByRecent(data || []);
+                renderNews();
+            });
+        }
+
+        function renderNews(page) {
+            if (typeof page === 'number') listPage.news = page;
+            const div = document.getElementById('newsList');
+            const q = listSearch.news;
+            const filtered = q
+                ? window.newsData.filter(x => `${x.date || ''} ${x.title || ''} ${x.content || ''}`.toLowerCase().includes(q))
+                : window.newsData;
+            const total = filtered.length;
+            ensureValidPage('news', total);
+            if (total === 0) { div.innerHTML = '<p style="opacity:.6;">登録済みのお知らせはありません。</p>'; return; }
+            const rows = pageSlice(filtered, listPage.news);
+            let html = '<table><tr><th>日付</th><th>サムネイル</th><th>タイトル</th><th>添付</th><th>管理</th></tr>';
+            rows.forEach(x => {
+                const i = window.newsData.findIndex(n => n.id === x.id);
+                const files = normalizeFileUrls(x.file_urls, x.file_url);
+                const imageCandidates = [x.thumbnail_url, x.file_url].concat(files);
+                const imageThumb = imageCandidates.find(isImageUrl) || '';
+                const docs = files.filter(f => !isImageUrl(f));
+                const docsHtml = docs.length
+                    ? docs.map(u => `<a href="${toApiUrl(u)}" target="_blank" download style="color:var(--accent); margin-right:8px;">📄 ダウンロード</a>`).join('')
+                    : '-';
+                const thumbHtml = imageThumb
+                    ? `<img src="${toApiUrl(imageThumb)}" class="preview-img" onerror="this.style.background='#eee'; this.alt='No Image';">`
+                    : `<div style="width:80px;height:50px;border-radius:4px;background:#f1f3f5;border:1px solid #e5e5e5;"></div>`;
+                html += `<tr>
+                    <td>${x.date || '-'}</td>
+                    <td>${thumbHtml}</td>
+                    <td>${x.title || ''}</td>
+                    <td>${docsHtml}</td>
+                    <td>
+                        <button onclick="editNews(${i})" style="background:var(--accent); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn-delete" onclick="deleteItem('news', ${x.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            html += '</table>' + buildPager('news', total, 'renderNews');
+            div.innerHTML = html;
+        }
+
+        function loadGallery() {
+            fetch(`${API_BASE}/api/gallery`).then(r => r.json()).then(data => {
+                window.galleryData = sortByRecent(data || []);
+                populateGalleryCategoryOptions();
+                renderGallery();
+            });
+        }
+
+        function renderGallery(page) {
+            if (typeof page === 'number') listPage.gallery = page;
+            const div = document.getElementById('galleryList');
+            const q = listSearch.gallery;
+            const category = listCategory.gallery;
+            const filteredByCategory = category
+                ? window.galleryData.filter(x => (x.category || '').trim() === category)
+                : window.galleryData;
+            const filtered = q
+                ? filteredByCategory.filter(x => `${x.date || ''} ${x.title || ''} ${x.category || ''}`.toLowerCase().includes(q))
+                : filteredByCategory;
+            const total = filtered.length;
+            ensureValidPage('gallery', total);
+            if (total === 0) { div.innerHTML = '<p style="opacity:.6;">登録済みの実績はありません。</p>'; return; }
+            const rows = pageSlice(filtered, listPage.gallery);
+            let html = '<table><tr><th>日付</th><th>画像</th><th>タイトル</th><th>カテゴリ</th><th>管理</th></tr>';
+            rows.forEach(x => {
+                const i = window.galleryData.findIndex(g => g.id === x.id);
+                const imgSrc = x.image_url && x.image_url.startsWith('/') ? `${API_BASE}${x.image_url}` : (x.image_url || '');
+                html += `<tr>
+                    <td>${x.date || '-'}</td>
+                    <td><img src="${imgSrc}" class="preview-img" onerror="this.style.background='#eee'; this.alt='No Image';"></td>
+                    <td>${x.title || ''}</td>
+                    <td><span style="font-size:0.8em; background:#eef; padding:2px 6px; border-radius:3px;">${x.category || '-'}</span></td>
+                    <td>
+                        <button onclick="editGal(${i})" style="background:var(--accent); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn-delete" onclick="deleteItem('gallery', ${x.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            html += '</table>' + buildPager('gallery', total, 'renderGallery');
+            div.innerHTML = html;
+        }
+
+        function deleteItem(type, id) {
+            if (!confirm('本当に削除しますか？')) return;
+            fetch(`${API_BASE}/api/admin/${type}/${id}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(() => {
+                    if (type === 'contacts') loadInquiries();
+                    if (type === 'news') loadNews();
+                    if (type === 'gallery') loadGallery();
+                    loadDashboard();
+                });
+        }
+
+        function uploadImage() {
+            const file = document.getElementById('galFile').files[0];
+            const status = document.getElementById('uploadStatus');
+            if (!file) { alert('ファイルを選択してください。'); return; }
+            const fd = new FormData();
+            fd.append('image', file);
+            status.textContent = 'アップロード中...';
+            status.style.color = 'orange';
+            fetch(`${API_BASE}/api/admin/upload`, { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.url) {
+                        document.getElementById('galUrl').value = d.url;
+                        status.textContent = 'アップロード成功';
+                        status.style.color = 'var(--accent)';
+                    } else {
+                        status.textContent = 'アップロード失敗';
+                        status.style.color = 'red';
+                    }
+                })
+                .catch(() => {
+                    status.textContent = 'サーバーエラー';
+                    status.style.color = 'red';
+                });
+        }
+
+        function editGal(index) {
+            const item = window.galleryData[index];
+            if (!item) return;
+            document.getElementById('editGalId').value = item.id;
+            document.getElementById('galTitle').value = item.title || '';
+            document.getElementById('galDate').value = item.date || '';
+            document.getElementById('galCategory').value = item.category || 'その他';
+            document.getElementById('galUrl').value = item.image_url || '';
+            document.getElementById('uploadStatus').textContent = item.image_url ? `現在の画像: ${item.image_url}` : '';
+            document.getElementById('galFormTitle').textContent = '実績を編集';
+            document.getElementById('btnGalSubmit').textContent = '変更を保存';
+            document.getElementById('btnGalCancel').style.display = 'inline-block';
+        }
+
+        function resetGalForm() {
+            document.getElementById('galleryForm').reset();
+            document.getElementById('editGalId').value = '';
+            document.getElementById('galUrl').value = '';
+            document.getElementById('uploadStatus').textContent = '';
+            document.getElementById('galFormTitle').textContent = '施工実績作成';
+            document.getElementById('btnGalSubmit').textContent = '実績を登録';
+            document.getElementById('btnGalCancel').style.display = 'none';
+        }
+
+        function addGallery() {
+            const id = document.getElementById('editGalId').value;
+            const title = document.getElementById('galTitle').value;
+            const date = document.getElementById('galDate').value;
+            const category = document.getElementById('galCategory').value;
+            const image_url = document.getElementById('galUrl').value;
+            if (!image_url) { alert('画像をアップロードしてください。'); return; }
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API_BASE}/api/admin/gallery/${id}` : `${API_BASE}/api/admin/gallery`;
+            fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, date, category, image_url })
+            }).then(r => {
+                if (!r.ok) throw new Error('API Error');
+                return r.json();
+            }).then(() => {
+                resetGalForm();
+                loadGallery();
+                loadDashboard();
+            }).catch(() => {
+                alert('保存に失敗しました。');
+            });
+        }
+
+        function loadSettings() {
+            fetch(`${API_BASE}/api/settings`).then(r => r.json()).then(data => {
+                document.getElementById('setSiteTitle').value = data.site_title || '';
+                document.getElementById('setContactEmail').value = data.contact_email || '';
+                document.getElementById('setMainColor').value = data.main_color || '';
+            });
+            resetAdminForm();
+            renderAdminAccounts();
+        }
+
+        function saveSettings() {
+            const settings = {
+                site_title: document.getElementById('setSiteTitle').value,
+                contact_email: document.getElementById('setContactEmail').value,
+                main_color: document.getElementById('setMainColor').value
+            };
+            fetch(`${API_BASE}/api/admin/settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            }).then(() => alert('設定を保存しました。'));
+        }
+
+        window.onload = function () {
+            ensureDefaultAdmin();
+            showAuthGate(!isLoggedIn());
+            loadDashboard();
+            loadInquiries();
+            loadNews();
+            loadGallery();
+            const idEl = document.getElementById('authAdminId');
+            const pwEl = document.getElementById('authAdminPw');
+            if (idEl) idEl.addEventListener('keydown', e => { if (e.key === 'Enter') loginAdmin(); });
+            if (pwEl) pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') loginAdmin(); });
+        };
+    </script>
+
+<script>
+/* News Feature Hotfix */
+(function () {
+  function ensureNewsExtraFields() {
+    var newsForm = document.getElementById('newsForm');
+    if (!newsForm) return;
+
+    var content = document.getElementById('newsContent');
+    if (content && !document.getElementById('newsYoutubeUrl')) {
+      var label = document.createElement('label');
+      label.textContent = 'YouTube URL';
+      var input = document.createElement('input');
+      input.type = 'url';
+      input.id = 'newsYoutubeUrl';
+      input.placeholder = 'https://www.youtube.com/watch?v=...';
+      content.insertAdjacentElement('afterend', label);
+      label.insertAdjacentElement('afterend', input);
+    }
+
+    if (!document.getElementById('newsFileUrls')) {
+      var hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.id = 'newsFileUrls';
+      hidden.value = '[]';
+      var fileUrl = document.getElementById('newsFileUrl');
+      if (fileUrl) fileUrl.insertAdjacentElement('afterend', hidden);
+    }
+
+    if (!document.getElementById('newsUploadedFiles')) {
+      var list = document.createElement('div');
+      list.id = 'newsUploadedFiles';
+      list.style.fontSize = '0.8rem';
+      list.style.color = '#666';
+      list.style.marginBottom = '15px';
+      var status = document.getElementById('newsFileStatus');
+      if (status) status.insertAdjacentElement('afterend', list);
+    }
+
+    var uploadWrap = document.getElementById('newsUploadList');
+    if (!uploadWrap) {
+      var fileInput = document.getElementById('newsFile');
+      if (fileInput && fileInput.parentElement) {
+        fileInput.parentElement.id = 'newsUploadList';
+        uploadWrap = fileInput.parentElement;
+      }
+    }
+
+    if (uploadWrap) {
+      var firstBtn = uploadWrap.querySelector('button.btn-upload');
+      if (firstBtn) {
+        firstBtn.textContent = '\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9';
+        firstBtn.setAttribute('onclick', "uploadNewsFile('newsFile')");
+      }
+
+      // Ensure existing "+" buttons always call the latest handler.
+      var plusButtons = uploadWrap.querySelectorAll('button');
+      plusButtons.forEach(function (btn) {
+        if ((btn.textContent || '').trim() === '+') {
+          btn.type = 'button';
+          btn.onclick = function () { window.addNewsFileInput(); };
+        }
+      });
+
+      // Add "+" button only when there isn't one already.
+      var hasPlus = Array.prototype.some.call(
+        uploadWrap.querySelectorAll('button'),
+        function (btn) { return (btn.textContent || '').trim() === '+'; }
+      );
+      if (!hasPlus) {
+        var addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'news-add-btn';
+        addBtn.style.background = '#666';
+        addBtn.textContent = '+';
+        addBtn.onclick = function () { window.addNewsFileInput(); };
+        uploadWrap.appendChild(addBtn);
+      }
+    }
+  }
+
+  function ensureNewsFileUrlsArray() {
+    if (!Array.isArray(window.newsFileUrls)) {
+      window.newsFileUrls = [];
+    }
+    return window.newsFileUrls;
+  }
+  ensureNewsFileUrlsArray();
+
+  function parseNewsFileUrls(item) {
+    if (!item) return [];
+    if (Array.isArray(item.file_urls)) return item.file_urls.filter(Boolean);
+    if (typeof item.file_urls === 'string' && item.file_urls.trim()) {
+      try {
+        var parsed = JSON.parse(item.file_urls);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+      } catch (e) {
+        return [item.file_urls];
+      }
+    }
+    return item.file_url ? [item.file_url] : [];
+  }
+
+  function isImageFile(url) {
+    return /\\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(url || '');
+  }
+
+  window.renderNewsUploadedFiles = function () {
+    var files = ensureNewsFileUrlsArray();
+    var el = document.getElementById('newsUploadedFiles');
+    if (!el) return;
+    if (!files.length) {
+      el.innerHTML = '';
+    } else {
+      el.innerHTML = files.map(function (u, i) {
+        return '<span style="display:inline-block; margin:0 8px 8px 0; padding:4px 8px; border:1px solid #ddd; border-radius:12px;">' +
+          u.split('/').pop() +
+          ' <button type="button" onclick="removeNewsFile(' + i + ')" style="margin-left:6px; background:#ff4d4d; padding:2px 6px;">x</button></span>';
+      }).join('');
+    }
+    var urlsEl = document.getElementById('newsFileUrls');
+    if (urlsEl) urlsEl.value = JSON.stringify(files);
+    var one = document.getElementById('newsFileUrl');
+    if (one) one.value = files[0] || '';
+  };
+
+  window.removeNewsFile = function (index) {
+    var files = ensureNewsFileUrlsArray();
+    files.splice(index, 1);
+    window.renderNewsUploadedFiles();
+  };
+
+  window.addNewsFileInput = function () {
+    var wrap = document.getElementById('newsUploadList');
+    if (!wrap) return;
+    var id = 'newsFile_' + Date.now();
+    var row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '10px';
+    row.style.marginTop = '10px';
+
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.id = id;
+    input.style.width = 'auto';
+
+    var uploadBtn = document.createElement('button');
+    uploadBtn.type = 'button';
+    uploadBtn.className = 'btn-upload';
+    uploadBtn.textContent = '\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9';
+    uploadBtn.onclick = function () { window.uploadNewsFile(id); };
+
+    var removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.style.background = '#999';
+    removeBtn.textContent = '-';
+    removeBtn.onclick = function () { row.remove(); };
+
+    row.appendChild(input);
+    row.appendChild(uploadBtn);
+    row.appendChild(removeBtn);
+    wrap.appendChild(row);
+  };
+
+  window.uploadNewsFile = function (inputId) {
+    if (!inputId) inputId = 'newsFile';
+    var input = document.getElementById(inputId);
+    var file = input && input.files ? input.files[0] : null;
+    var status = document.getElementById('newsFileStatus');
+    if (!file) {
+      if (status) { status.textContent = '\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044'; status.style.color = 'red'; }
+      return;
+    }
+    var formData = new FormData();
+    formData.append('image', file);
+    if (status) { status.textContent = '\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u4e2d...'; status.style.color = 'orange'; }
+
+    fetch(API_BASE + '/api/admin/upload', { method: 'POST', body: formData })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (data) {
+          if (!res.ok) {
+            var msg = data && data.error ? data.error : ('HTTP ' + res.status);
+            throw new Error(msg);
+          }
+          return data;
+        });
+      })
+      .then(function (data) {
+        if (data && data.url) {
+          var files = ensureNewsFileUrlsArray();
+          files.push(data.url);
+          window.renderNewsUploadedFiles();
+          if (status) { status.textContent = '\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u6210\u529f: ' + file.name; status.style.color = 'var(--accent)'; }
+        } else {
+          if (status) { status.textContent = '\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u5931\u6557'; status.style.color = 'red'; }
+        }
+      })
+      .catch(function (err) {
+        if (status) { status.textContent = '\u30b5\u30fc\u30d0\u30fc\u30a8\u30e9\u30fc: ' + (err && err.message ? err.message : 'unknown'); status.style.color = 'red'; }
+      });
+  };
+
+  window.editNews = function (index) {
+    var item = (window.newsData || [])[index];
+    if (!item) return;
+    document.getElementById('editNewsId').value = item.id;
+    document.getElementById('newsTitle').value = item.title || '';
+    document.getElementById('newsDate').value = item.date || '';
+    document.getElementById('newsContent').value = item.content || '';
+    var yt = document.getElementById('newsYoutubeUrl');
+    if (yt) yt.value = item.youtube_url || '';
+    window.newsFileUrls = parseNewsFileUrls(item);
+    ensureNewsFileUrlsArray();
+    window.renderNewsUploadedFiles();
+    document.getElementById('btnNewsCancel').style.display = 'inline-block';
+  };
+
+  window.resetNewsForm = function () {
+    var form = document.getElementById('newsForm');
+    if (form) form.reset();
+    document.getElementById('editNewsId').value = '';
+    var yt = document.getElementById('newsYoutubeUrl');
+    if (yt) yt.value = '';
+    window.newsFileUrls = [];
+    ensureNewsFileUrlsArray();
+    window.renderNewsUploadedFiles();
+    var status = document.getElementById('newsFileStatus');
+    if (status) status.textContent = '';
+    document.getElementById('btnNewsCancel').style.display = 'none';
+  };
+
+  window.addNews = function () {
+    var id = document.getElementById('editNewsId').value;
+    var title = document.getElementById('newsTitle').value;
+    var date = document.getElementById('newsDate').value;
+    var content = document.getElementById('newsContent').value;
+    var yt = document.getElementById('newsYoutubeUrl');
+    var youtube_url = yt ? yt.value : '';
+
+    if (!title || !date) {
+      alert('\u30bf\u30a4\u30c8\u30eb\u3068\u65e5\u4ed8\u306f\u5fc5\u9808\u3067\u3059');
+      return;
+    }
+
+    var file_urls = ensureNewsFileUrlsArray().slice();
+    var file_url = file_urls[0] || '';
+    var thumbnail_url = '';
+    for (var i = 0; i < file_urls.length; i++) {
+      if (isImageFile(file_urls[i])) { thumbnail_url = file_urls[i]; break; }
+    }
+
+    var method = id ? 'PUT' : 'POST';
+    var url = id ? (API_BASE + '/api/admin/news/' + id) : (API_BASE + '/api/admin/news');
+
+    fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: title,
+        date: date,
+        content: content,
+        thumbnail_url: thumbnail_url,
+        file_url: file_url,
+        file_urls: file_urls,
+        youtube_url: youtube_url
+      })
+    })
+    .then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) {
+          var msg = data && data.error ? data.error : ('HTTP ' + res.status);
+          throw new Error(msg);
+        }
+        return data;
+      });
+    })
+    .then(function () {
+      window.resetNewsForm();
+      if (typeof window.loadNews === 'function') window.loadNews();
+      if (typeof window.loadDashboard === 'function') window.loadDashboard();
+    })
+    .catch(function (err) {
+      alert('\u4fdd\u5b58\u5931\u6557: ' + (err && err.message ? err.message : 'unknown'));
+    });
+  };
+
+  ensureNewsExtraFields();
+  window.renderNewsUploadedFiles();
+})();
+</script>
+
+</body>
+</html>
+
+
+

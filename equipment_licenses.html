@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保有重機・車両および許認可情報</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Moto+Sans+JP:wght@400;500;700&display=swap');
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #333;
+    background-color: #fff;
+    line-height: 1.6;
+  }
+  
+  .corporate-assets-section {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 0 20px;
+  }
+  
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 0.05em;
+  }
+  
+  .section-desc {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 60px;
+  }
+  
+  .table-title {
+    font-size: 22px;
+    font-weight: 700;
+    border-left: 6px solid #004d99; /* 信頼感のある濃いブルー */
+    padding-left: 15px;
+    margin-bottom: 20px;
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* テーブル共通スタイル */
+  .premium-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    border-top: 3px solid #2c3e50; /* ヘッダーの重厚感 */
+    border-bottom: 2px solid #cbd5e1;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  }
+  
+  .premium-table th, .premium-table td {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
+  
+  .premium-table th {
+    width: 35%;
+    background-color: #f8fafc;
+    text-align: left;
+    font-weight: 600;
+    color: #1e293b;
+    position: relative;
+  }
+  
+  /* チェックアイコン（疑似要素） */
+  .check-icon::before {
+    content: "✓";
+    color: #004d99;
+    font-weight: bold;
+    margin-right: 8px;
+    font-size: 18px;
+  }
+
+  /* 機材テーブル用スタイル */
+  .equipment-row td {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .thumbnail-box {
+    flex-shrink: 0;
+    width: 120px;
+    height: 80px;
+    background-color: #edf2f7;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 12px;
+    overflow: hidden;
+  }
+  
+  /* 許認可テーブル用スタイル */
+  .license-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .license-subtitle {
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  /* 許可証ボタンスタイル */
+  .btn-view-doc {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #004d99;
+    color: #004d99;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-view-doc:hover {
+    background-color: #004d99;
+    color: #fff;
+  }
+
+  .btn-view-doc::after {
+    content: " PDF";
+    font-weight: bold;
+    font-size: 11px;
+    margin-left: 6px;
+    opacity: 0.8;
+  }
+
+  /* レスポンシブ対応 */
+  @media (max-width: 768px) {
+    .premium-table th, .premium-table td {
+      display: block;
+      width: 100%;
+    }
+    .premium-table th {
+      padding-bottom: 8px;
+      border-bottom: none;
+    }
+    .premium-table td {
+      padding-top: 0; 
+      padding-left: 24px;
+    }
+    .equipment-row td {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .license-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<section class="corporate-assets-section">
+  <h2 class="section-title">保有重機・車両および許認可情報</h2>
+  <p class="section-desc">安全かつ迅速な施工を実現する自社機材と、法令遵守を証明する許認可・登録一覧です。</p>
+
+  <!-- 1. 保有機材・車両 -->
+  <h3 class="table-title">保有機材・車両（Equipment）</h3>
+  <table class="premium-table">
+    <tbody>
+      <tr class="equipment-row">
+        <th class="check-icon">油圧ショベル<br><span class="license-subtitle">ユンボ / バックホー</span></th>
+        <td>
+          <div class="thumbnail-box">[ 現場写真入る ]</div>
+          <div>
+            <strong>大型～小型まで各種（解体用各種アタッチメント完備）</strong><br>
+            <span style="font-size: 13px; color: #64748b;">建物の基礎解体から大規模造成まで、現場の規模に合わせた最適な重機を自社配備。</span>
+          </div>
+        </td>
+      </tr>
+      <tr class="equipment-row">
+        <th class="check-icon">ダンプトラック<br><span class="license-subtitle">運搬車両</span></th>
+        <td>
+          <div class="thumbnail-box">[ 車両写真入る ]</div>
+          <div>
+            <strong>大型（10t）、中型（4t）、小型（2t・3t）等</strong><br>
+            <span style="font-size: 13px; color: #64748b;">搬出路の広さや廃棄物の量に応じ、安全かつ効率的な運搬を実現します。</span>
+          </div>
+        </td>
+      </tr>
+      <tr class="equipment-row">
+        <th class="check-icon">アームロール車<br><span class="license-subtitle">コンテナ専用車</span></th>
+        <td>
+          <div class="thumbnail-box">[ コンテナ写真 ]</div>
+          <div>
+            <strong>4t・8t クラス ほか</strong><br>
+            <span style="font-size: 13px; color: #64748b;">現場に専用コンテナを設置し、廃棄物が溜まり次第スムーズに回収・交換を行います。</span>
+          </div>
+        </td>
+      </tr>
+      <tr class="equipment-row">
+        <th class="check-icon">クレーン付きトラック<br><span class="license-subtitle">ユニック車</span></th>
+        <td>
+          <div class="thumbnail-box">[ ユニック写真 ]</div>
+          <div>
+            <strong>資材運搬、足場組み立て等</strong><br>
+            <span style="font-size: 13px; color: #64748b;">重量物の吊り上げから運搬まで一台で可能。現場の省力化に貢献します。</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 2. 必須許認可一覧 -->
+  <h3 class="table-title">許認可・登録一覧（Licenses & Registrations）</h3>
+  <table class="premium-table">
+    <tbody>
+      <tr>
+        <th class="check-icon">
+          産業廃棄物収集運搬業許可
+          <span class="license-subtitle">（産業廃棄物収集運搬業 許可）</span>
+        </th>
+        <td>
+          <div class="license-content">
+            <div>
+              東京都 第00-00-000000号<br>
+              埼玉県 第00-00-000000号<br>
+              神奈川県 第00-00-000000号
+            </div>
+            <a href="#modal" class="btn-view-doc">許可証の写しを見る</a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th class="check-icon">
+          特別管理産業廃棄物収集運搬業許可
+          <span class="license-subtitle">（特別管理産業廃棄物収集運搬業 - 石綿等）</span>
+        </th>
+        <td>
+          <div class="license-content">
+            <div>東京都 第00-00-000000号</div>
+            <a href="#modal" class="btn-view-doc">許可証の写しを見る</a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th class="check-icon">
+          建設業許可
+          <span class="license-subtitle">（建設業 許可）</span>
+        </th>
+        <td>
+          <div class="license-content">
+            <div>
+              国土交通大臣許可（般-00）第00000号<br>
+              <strong>【業種】</strong> 土木工事業、とび・土工工事業、解体工事業
+            </div>
+            <a href="#modal" class="btn-view-doc">許可証の写しを見る</a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th class="check-icon">
+          古物商許可
+          <span class="license-subtitle">（古物商許可 - 有価物買取に必要）</span>
+        </th>
+        <td>
+          <div class="license-content">
+            <div>〇〇公安委員会 第000000000000号</div>
+            <a href="#modal" class="btn-view-doc">許可証の写しを見る</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>
